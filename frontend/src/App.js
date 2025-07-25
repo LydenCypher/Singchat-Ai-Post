@@ -142,7 +142,7 @@ function App() {
         <header className="bg-white border-b border-gray-200 p-4 sticky top-0 z-10">
           <div className="max-w-lg mx-auto flex items-center justify-between">
             <h1 className="text-2xl font-bold">
-              Character<span className="text-purple-600">Gram</span>
+              SingChat <span className="text-purple-600">ai post</span>
             </h1>
             <div className="flex items-center gap-4">
               <button className="text-gray-600 hover:text-gray-800">
