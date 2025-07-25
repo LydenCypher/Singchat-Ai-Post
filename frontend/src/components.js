@@ -571,8 +571,8 @@ export const Post = ({ post, onLike, onComment, onChat, onPlayMusic, playingMusi
   );
 };
 
-// Main Feed Component
-export const Feed = ({ posts, stories, onLike, onComment, onChat }) => {
+// Main Feed Component (Updated with music support)
+export const Feed = ({ posts, stories, onLike, onComment, onChat, playingMusic, onPlayMusic }) => {
   return (
     <div className="max-w-lg mx-auto">
       {/* Stories Section */}
@@ -588,6 +588,8 @@ export const Feed = ({ posts, stories, onLike, onComment, onChat }) => {
           onLike={onLike}
           onComment={onComment}
           onChat={onChat}
+          playingMusic={playingMusic}
+          onPlayMusic={onPlayMusic}
         />
       ))}
     </div>
