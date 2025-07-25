@@ -1338,6 +1338,8 @@ export const ChatInterface = ({ character, onClose }) => {
 
 // Bottom Navigation (Updated with Music)
 export const BottomNavigation = ({ currentPage, onPageChange }) => {
+  const { theme } = useTheme();
+  
   const navItems = [
     { id: 'feed', icon: 'home', label: 'Feed' },
     { id: 'discover', icon: 'search', label: 'Discover' },
@@ -1347,7 +1349,7 @@ export const BottomNavigation = ({ currentPage, onPageChange }) => {
   ];
 
   const getIcon = (iconType, isActive) => {
-    const className = `w-6 h-6 ${isActive ? 'text-purple-600' : 'text-gray-400'}`;
+    const className = `w-6 h-6 ${isActive ? `text-${theme.colors.primary}` : 'text-gray-400'}`;
     
     switch (iconType) {
       case 'home':
@@ -1393,11 +1395,11 @@ export const BottomNavigation = ({ currentPage, onPageChange }) => {
             key={item.id}
             onClick={() => onPageChange(item.id)}
             className={`flex flex-col items-center p-2 transition-colors ${
-              currentPage === item.id ? 'text-purple-600' : 'text-gray-400 hover:text-gray-600'
+              currentPage === item.id ? `text-${theme.colors.primary}` : 'text-gray-400 hover:text-gray-600'
             }`}
           >
             {getIcon(item.icon, currentPage === item.id)}
-            <span className={`text-xs mt-1 ${currentPage === item.id ? 'text-purple-600' : 'text-gray-400'}`}>
+            <span className={`text-xs mt-1 ${currentPage === item.id ? `text-${theme.colors.primary}` : 'text-gray-400'}`}>
               {item.label}
             </span>
           </button>
