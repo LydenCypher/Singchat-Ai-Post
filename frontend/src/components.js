@@ -793,11 +793,16 @@ export const MusicDiscoveryPage = ({ music, onMusicSelect, playingMusic, onPlayM
 // Character Profile Component (Updated to show music)
 export const CharacterProfile = ({ character, posts, onChat, onFollow, playingMusic, onPlayMusic }) => {
   const [isFollowing, setIsFollowing] = useState(false);
+  const [activeTab, setActiveTab] = useState('posts');
   
   const handleFollow = () => {
     setIsFollowing(!isFollowing);
     onFollow(character.id, !isFollowing);
   };
+
+  const characterPosts = posts.filter(p => p.characterId === character.id);
+  const musicPosts = characterPosts.filter(p => p.type === 'music');
+  const imagePosts = characterPosts.filter(p => p.type === 'text' || p.image);
 
   return (
     <div className="max-w-lg mx-auto bg-white">
@@ -819,7 +824,7 @@ export const CharacterProfile = ({ character, posts, onChat, onFollow, playingMu
             <h1 className="text-xl font-bold">{character.name}</h1>
             <p className="text-gray-600 mb-2">{character.username}</p>
             <div className="flex gap-6 text-sm">
-              <span><strong>{character.posts}</strong> posts</span>
+              <span><strong>{characterPosts.length}</strong> posts</span>
               <span><strong>{character.followers}</strong> followers</span>
               <span><strong>{character.following}</strong> following</span>
             </div>
@@ -860,18 +865,79 @@ export const CharacterProfile = ({ character, posts, onChat, onFollow, playingMu
         </div>
       </div>
 
-      {/* Posts Grid */}
+      {/* Content Tabs */}
       <div className="border-t border-gray-200">
-        <div className="grid grid-cols-3 gap-1 p-1">
-          {posts.filter(p => p.characterId === character.id).map((post) => (
-            <div key={post.id} className="aspect-square">
-              <img 
-                src={post.image} 
-                alt="Post"
-                className="w-full h-full object-cover cursor-pointer hover:opacity-75 transition-opacity"
-              />
+        <div className="flex">
+          <button
+            onClick={() => setActiveTab('posts')}
+            className={`flex-1 py-3 px-4 text-sm font-medium border-b-2 transition-colors ${
+              activeTab === 'posts'
+                ? 'border-purple-600 text-purple-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            <div className="flex items-center justify-center gap-2">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              Posts ({imagePosts.length})
             </div>
-          ))}
+          </button>
+          <button
+            onClick={() => setActiveTab('music')}
+            className={`flex-1 py-3 px-4 text-sm font-medium border-b-2 transition-colors ${
+              activeTab === 'music'
+                ? 'border-purple-600 text-purple-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            <div className="flex items-center justify-center gap-2">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+              </svg>
+              Music ({musicPosts.length})
+            </div>
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className="p-1">
+          {activeTab === 'posts' && (
+            <div className="grid grid-cols-3 gap-1">
+              {imagePosts.map((post) => (
+                <div key={post.id} className="aspect-square">
+                  <img 
+                    src={post.image} 
+                    alt="Post"
+                    className="w-full h-full object-cover cursor-pointer hover:opacity-75 transition-opacity"
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+          
+          {activeTab === 'music' && (
+            <div className="space-y-4 p-3">
+              {musicPosts.map((post) => (
+                <MusicPlayer
+                  key={post.id}
+                  music={post.music}
+                  isPlaying={playingMusic && playingMusic.id === post.music.id}
+                  onPlayPause={() => onPlayMusic(post.music)}
+                  currentTime={playingMusic?.id === post.music.id ? (playingMusic.currentTime || 0) : 0}
+                  duration={180}
+                />
+              ))}
+              {musicPosts.length === 0 && (
+                <div className="text-center py-8 text-gray-500">
+                  <svg className="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                  </svg>
+                  <p>No music created yet</p>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>
