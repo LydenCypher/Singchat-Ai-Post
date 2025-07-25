@@ -1175,12 +1175,12 @@ export const ChatInterface = ({ character, onClose }) => {
   );
 };
 
-// Bottom Navigation
+// Bottom Navigation (Updated with Music)
 export const BottomNavigation = ({ currentPage, onPageChange }) => {
   const navItems = [
     { id: 'feed', icon: 'home', label: 'Feed' },
     { id: 'discover', icon: 'search', label: 'Discover' },
-    { id: 'create', icon: 'plus', label: 'Create' },
+    { id: 'music', icon: 'music', label: 'Music' },
     { id: 'messages', icon: 'message', label: 'Messages' },
     { id: 'profile', icon: 'user', label: 'Profile' }
   ];
@@ -1201,10 +1201,10 @@ export const BottomNavigation = ({ currentPage, onPageChange }) => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
         );
-      case 'plus':
+      case 'music':
         return (
-          <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          <svg className={className} fill={isActive ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
           </svg>
         );
       case 'message':
@@ -1246,5 +1246,5 @@ export const BottomNavigation = ({ currentPage, onPageChange }) => {
   );
 };
 
-// Export mock data
-export { mockCharacters, mockPosts, mockStories };
+// Export mock data (Updated)
+export { mockCharacters, mockPosts, mockStories, mockMusic };
