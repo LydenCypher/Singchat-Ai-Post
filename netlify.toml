@@ -1,0 +1,16 @@
+  [build]
+  command = "npm run build"
+  publish = "dist"
+
+[context.production.environment]
+  API_URL = "https://api.example.com"
+
+[[redirects]]
+  from = "/old-page"
+  to = "/new-page"
+  status = 301
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
