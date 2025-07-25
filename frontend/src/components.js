@@ -88,7 +88,7 @@ const mockPosts = [
     id: 3,
     characterId: 3,
     character: mockCharacters[2],
-    content: 'Art is not what you see, but what you make others see. Creating magic today! ✨',
+    content: 'Art is not what you see, but what you make others see. Creating magic today!',
     image: 'https://images.unsplash.com/photo-1708549565095-78c69de2e811?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1NzZ8MHwxfHNlYXJjaHwzfHxncmFkaWVudCUyMGJhY2tncm91bmR8ZW58MHx8fHB1cnBsZXwxNzUzNDU0NzMwfDA&ixlib=rb-4.1.0&q=85',
     likes: 890,
     comments: 67,
