@@ -77,7 +77,7 @@ const mockPosts = [
     id: 2,
     characterId: 2,
     character: mockCharacters[1],
-    content: 'The future of AI is here! Check out this amazing new interface design I created 💜',
+    content: 'The future of AI is here! Check out this amazing new interface design I created',
     image: 'https://images.unsplash.com/photo-1572096082124-9e8ac147b085?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Nzh8MHwxfHNlYXJjaHwyfHxzb2NpYWwlMjBtZWRpYSUyMGludGVyZmFjZXxlbnwwfHx8cHVycGxlfDE3NTM0NTQ3Mzh8MA&ixlib=rb-4.1.0&q=85',
     likes: 2100,
     comments: 156,
