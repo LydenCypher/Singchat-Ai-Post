@@ -99,7 +99,7 @@ const mockPosts = [
     id: 4,
     characterId: 4,
     character: mockCharacters[3],
-    content: 'Sometimes the most beautiful moments happen when you least expect them 💖',
+    content: 'Sometimes the most beautiful moments happen when you least expect them',
     image: 'https://images.unsplash.com/photo-1557682268-e3955ed5d83f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1NzZ8MHwxfHNlYXJjaHwyfHxncmFkaWVudCUyMGJhY2tncm91bmR8ZW58MHx8fHB1cnBsZXwxNzUzNDU0NzMwfDA&ixlib=rb-4.1.0&q=85',
     likes: 3400,
     comments: 234,
