@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Test the CharacterGram fusion app that combines Character.AI, Crushon.AI, and Instagram features"
+user_problem_statement: "Test the SingChat ai post fusion app that combines Character.AI, Crushon.AI, Instagram features, and Suno AI music creation with custom themes"
 
 frontend:
   - task: "Landing Page Experience"
