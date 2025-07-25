@@ -407,6 +407,7 @@ const mockStories = [
 // Landing Page Component
 export const LandingPage = ({ onEnter }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const { theme } = useTheme();
 
   const handleEnter = () => {
     setIsLoading(true);
@@ -416,7 +417,7 @@ export const LandingPage = ({ onEnter }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 relative overflow-hidden">
+    <div className={`min-h-screen bg-gradient-to-br from-${theme.colors.primary} via-blue-900 to-${theme.colors.accent} relative overflow-hidden`}>
       {/* Hero Background */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-60"
@@ -424,18 +425,22 @@ export const LandingPage = ({ onEnter }) => {
       />
       
       {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-purple-900/80 via-transparent to-indigo-900/80" />
+      <div className={`absolute inset-0 bg-gradient-to-t ${theme.colors.gradientBg}`} />
+      
+      {/* Theme Selector */}
+      <ThemeSelector />
       
       {/* Navigation */}
       <nav className="relative z-10 flex justify-between items-center p-6">
-        <div className="text-2xl font-bold text-white">
-          SingChat <span className="text-purple-400">ai post</span>
+        <div className="text-2xl font-bold text-white flex items-center gap-2">
+          SingChat <span className={`text-${theme.colors.primaryLight}`}>ai post</span>
+          <FreeBadge />
         </div>
         <div className="flex gap-4">
           <button className="text-white/80 hover:text-white transition-colors">
             Login
           </button>
-          <button className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-full transition-colors">
+          <button className={`bg-${theme.colors.primary} hover:bg-${theme.colors.primaryDark} text-white px-6 py-2 rounded-full transition-colors`}>
             Sign Up
           </button>
         </div>
@@ -445,19 +450,23 @@ export const LandingPage = ({ onEnter }) => {
       <div className="relative z-10 flex flex-col items-center justify-center min-h-[calc(100vh-100px)] px-6">
         <div className="text-center max-w-4xl mx-auto">
           <h1 className="text-6xl md:text-7xl font-bold text-white mb-6">
-            Chat with
-            <span className="block bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+            Chat & Sing with
+            <span className={`block bg-gradient-to-r from-${theme.colors.gradientFrom} to-${theme.colors.gradientTo} bg-clip-text text-transparent`}>
               10M+ AI Characters
             </span>
           </h1>
           
           <p className="text-xl md:text-2xl text-white/80 mb-8 leading-relaxed">
-            Experience the future of social AI interaction. Chat with characters, 
-            follow their stories, and discover amazing personalities.
+            🎵 Create music, chat with AI characters, share posts & discover amazing personalities. 
+            <span className="block mt-2 text-lg text-green-400 font-semibold">
+              ✨ ALL FEATURES ARE COMPLETELY FREE ✨
+            </span>
           </p>
 
           <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 max-w-md mx-auto border border-white/20">
-            <h3 className="text-2xl font-semibold text-white mb-6">Get Started</h3>
+            <h3 className="text-2xl font-semibold text-white mb-6 flex items-center justify-center gap-2">
+              Get Started <FreeBadge />
+            </h3>
             
             <div className="space-y-4">
               <button className="w-full bg-white text-gray-900 py-3 px-6 rounded-lg font-medium hover:bg-gray-100 transition-colors flex items-center justify-center gap-3">
@@ -489,7 +498,7 @@ export const LandingPage = ({ onEnter }) => {
               <button
                 onClick={handleEnter}
                 disabled={isLoading}
-                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 px-6 rounded-lg font-medium hover:from-purple-700 hover:to-pink-700 transition-all transform hover:scale-105 disabled:opacity-50 disabled:scale-100"
+                className={`w-full bg-gradient-to-r from-${theme.colors.primary} to-${theme.colors.secondary} text-white py-3 px-6 rounded-lg font-medium hover:from-${theme.colors.primaryDark} hover:to-${theme.colors.secondary} transition-all transform hover:scale-105 disabled:opacity-50 disabled:scale-100`}
               >
                 {isLoading ? (
                   <div className="flex items-center justify-center gap-3">
@@ -504,7 +513,7 @@ export const LandingPage = ({ onEnter }) => {
             
             <p className="text-white/60 text-sm mt-6 leading-relaxed">
               By continuing, you agree with our{' '}
-              <a href="#" className="text-purple-400 hover:underline">Terms and Privacy Policy</a>
+              <a href="#" className={`text-${theme.colors.primaryLight} hover:underline`}>Terms and Privacy Policy</a>
             </p>
           </div>
         </div>
