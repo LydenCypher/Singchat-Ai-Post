@@ -277,7 +277,7 @@ export const LandingPage = ({ onEnter }) => {
       {/* Navigation */}
       <nav className="relative z-10 flex justify-between items-center p-6">
         <div className="text-2xl font-bold text-white">
-          Character<span className="text-purple-400">Gram</span>
+          SingChat <span className="text-purple-400">ai post</span>
         </div>
         <div className="flex gap-4">
           <button className="text-white/80 hover:text-white transition-colors">
