@@ -124,12 +124,13 @@ const mockCharacters = [
   }
 ];
 
-// Mock posts data
+// Mock posts data (updated with music posts)
 const mockPosts = [
   {
     id: 1,
     characterId: 1,
     character: mockCharacters[0],
+    type: 'text',
     content: 'Just finished watching the most amazing sunset! What is everyone up to tonight?',
     image: 'https://images.unsplash.com/photo-1596332996407-d8d5d3b60e8e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2Mzl8MHwxfHNlYXJjaHwxfHxhbmltZSUyMGNpdHlzY2FwZSUyMHN1bnNldHxlbnwwfHx8cHVycGxlfDE3NTM0NTQ3MDZ8MA&ixlib=rb-4.1.0&q=85',
     likes: 1240,
@@ -139,8 +140,33 @@ const mockPosts = [
   },
   {
     id: 2,
+    characterId: 1,
+    character: mockCharacters[0],
+    type: 'music',
+    content: 'Just created this dreamy lo-fi track inspired by tonight\'s beautiful sunset 🎵',
+    music: mockMusic[0],
+    likes: 2340,
+    comments: 156,
+    timestamp: '3 hours ago',
+    isLiked: true
+  },
+  {
+    id: 3,
     characterId: 2,
     character: mockCharacters[1],
+    type: 'music',
+    content: 'New electronic track perfect for your coding sessions! What do you think?',
+    music: mockMusic[1],
+    likes: 1200,
+    comments: 78,
+    timestamp: '5 hours ago',
+    isLiked: false
+  },
+  {
+    id: 4,
+    characterId: 2,
+    character: mockCharacters[1],
+    type: 'text',
     content: 'The future of AI is here! Check out this amazing new interface design I created',
     image: 'https://images.unsplash.com/photo-1572096082124-9e8ac147b085?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Nzh8MHwxfHNlYXJjaHwyfHxzb2NpYWwlMjBtZWRpYSUyMGludGVyZmFjZXxlbnwwfHx8cHVycGxlfDE3NTM0NTQ3Mzh8MA&ixlib=rb-4.1.0&q=85',
     likes: 2100,
@@ -149,9 +175,22 @@ const mockPosts = [
     isLiked: true
   },
   {
-    id: 3,
+    id: 5,
     characterId: 3,
     character: mockCharacters[2],
+    type: 'music',
+    content: 'New ambient track to boost your creativity! Perfect for artists and writers ✨',
+    music: mockMusic[2],
+    likes: 1850,
+    comments: 92,
+    timestamp: '1 day ago',
+    isLiked: false
+  },
+  {
+    id: 6,
+    characterId: 3,
+    character: mockCharacters[2],
+    type: 'text',
     content: 'Art is not what you see, but what you make others see. Creating magic today!',
     image: 'https://images.unsplash.com/photo-1708549565095-78c69de2e811?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1NzZ8MHwxfHNlYXJjaHwzfHxncmFkaWVudCUyMGJhY2tncm91bmR8ZW58MHx8fHB1cnBsZXwxNzUzNDU0NzMwfDA&ixlib=rb-4.1.0&q=85',
     likes: 890,
@@ -160,9 +199,22 @@ const mockPosts = [
     isLiked: false
   },
   {
-    id: 4,
+    id: 7,
     characterId: 4,
     character: mockCharacters[3],
+    type: 'music',
+    content: 'Poured my heart into this romantic ballad. For everyone who believes in true love 💕',
+    music: mockMusic[3],
+    likes: 4100,
+    comments: 267,
+    timestamp: '3 hours ago',
+    isLiked: true
+  },
+  {
+    id: 8,
+    characterId: 4,
+    character: mockCharacters[3],
+    type: 'text',
     content: 'Sometimes the most beautiful moments happen when you least expect them',
     image: 'https://images.unsplash.com/photo-1557682268-e3955ed5d83f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1NzZ8MHwxfHNlYXJjaHwyfHxncmFkaWVudCUyMGJhY2tncm91bmR8ZW58MHx8fHB1cnBsZXwxNzUzNDU0NzMwfDA&ixlib=rb-4.1.0&q=85',
     likes: 3400,
