@@ -66,7 +66,7 @@ const mockPosts = [
     id: 1,
     characterId: 1,
     character: mockCharacters[0],
-    content: 'Just finished watching the most amazing sunset! 🌅 What's everyone up to tonight?',
+    content: 'Just finished watching the most amazing sunset! What is everyone up to tonight?',
     image: 'https://images.unsplash.com/photo-1596332996407-d8d5d3b60e8e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2Mzl8MHwxfHNlYXJjaHwxfHxhbmltZSUyMGNpdHlzY2FwZSUyMHN1bnNldHxlbnwwfHx8cHVycGxlfDE3NTM0NTQ3MDZ8MA&ixlib=rb-4.1.0&q=85',
     likes: 1240,
     comments: 89,
