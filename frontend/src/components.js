@@ -383,8 +383,89 @@ export const Stories = ({ stories }) => {
   );
 };
 
-// Post Component
-export const Post = ({ post, onLike, onComment, onChat }) => {
+// Music Player Component
+export const MusicPlayer = ({ music, isPlaying, onPlayPause, currentTime = 0, duration = 100 }) => {
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  return (
+    <div className="bg-white rounded-lg border border-gray-200 p-4 mb-4">
+      <div className="flex items-center gap-4">
+        {/* Cover Art */}
+        <div className="relative flex-shrink-0">
+          <img
+            src={music.coverArt}
+            alt={music.title}
+            className="w-16 h-16 rounded-lg object-cover"
+          />
+          <div className="absolute inset-0 bg-black bg-opacity-40 rounded-lg flex items-center justify-center">
+            <button
+              onClick={onPlayPause}
+              className="text-white hover:text-purple-300 transition-colors"
+            >
+              {isPlaying ? (
+                <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
+                </svg>
+              ) : (
+                <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Music Info */}
+        <div className="flex-1 min-w-0">
+          <h3 className="font-semibold text-gray-900 truncate">{music.title}</h3>
+          <p className="text-sm text-gray-600 truncate">{music.artist}</p>
+          <div className="flex items-center gap-3 mt-1">
+            <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full">
+              {music.genre}
+            </span>
+            <span className="text-xs text-gray-500">{music.mood}</span>
+          </div>
+
+          {/* Progress Bar */}
+          <div className="mt-3">
+            <div className="flex items-center gap-2 text-xs text-gray-500 mb-1">
+              <span>{formatTime(currentTime)}</span>
+              <div className="flex-1 h-1 bg-gray-200 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-purple-600 rounded-full transition-all duration-300"
+                  style={{ width: `${(currentTime / duration) * 100}%` }}
+                />
+              </div>
+              <span>{music.duration}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Stats */}
+        <div className="text-right flex-shrink-0">
+          <div className="text-sm font-medium text-gray-900">{music.plays?.toLocaleString()} plays</div>
+          <div className="text-xs text-gray-500 mt-1">
+            Created with Suno AI
+          </div>
+        </div>
+      </div>
+
+      {/* Music Prompt */}
+      <div className="mt-4 pt-3 border-t border-gray-100">
+        <p className="text-sm text-gray-600 italic">
+          <span className="font-medium">Prompt:</span> "{music.prompt}"
+        </p>
+      </div>
+    </div>
+  );
+};
+
+// Post Component (Updated to handle music posts)
+export const Post = ({ post, onLike, onComment, onChat, onPlayMusic, playingMusic }) => {
   return (
     <div className="bg-white border border-gray-200 rounded-lg mb-6">
       {/* Post Header */}
