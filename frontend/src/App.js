@@ -19,7 +19,7 @@ import {
   mockMusic
 } from './components';
 
-function App() {
+function AppContent() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentPage, setCurrentPage] = useState('feed');
   const [posts, setPosts] = useState(mockPosts);
@@ -27,6 +27,7 @@ function App() {
   const [selectedCharacter, setSelectedCharacter] = useState(null);
   const [isInChat, setIsInChat] = useState(false);
   const [playingMusic, setPlayingMusic] = useState(null);
+  const { theme } = useTheme();
 
   // Handle landing page entry
   const handleEnter = () => {
@@ -139,13 +140,14 @@ function App() {
 
   // Main app interface
   return (
-    <div className="App min-h-screen bg-gray-50">
+    <div className={`App min-h-screen bg-${theme.colors.background}`}>
       <div className="pb-16"> {/* Add padding for bottom navigation */}
         {/* Header */}
         <header className="bg-white border-b border-gray-200 p-4 sticky top-0 z-10">
           <div className="max-w-lg mx-auto flex items-center justify-between">
-            <h1 className="text-2xl font-bold">
-              SingChat <span className="text-purple-600">ai post</span>
+            <h1 className="text-2xl font-bold flex items-center gap-2">
+              SingChat <span className={`text-${theme.colors.primary}`}>ai post</span>
+              <FreeBadge />
             </h1>
             <div className="flex items-center gap-4">
               <button className="text-gray-600 hover:text-gray-800">
@@ -250,7 +252,7 @@ function App() {
 
       {/* Global Music Player (if music is playing) */}
       {playingMusic && (
-        <div className="fixed bottom-16 left-0 right-0 bg-purple-600 text-white px-4 py-2 shadow-lg">
+        <div className={`fixed bottom-16 left-0 right-0 bg-${theme.colors.primary} text-white px-4 py-2 shadow-lg`}>
           <div className="max-w-lg mx-auto flex items-center gap-3">
             <button
               onClick={() => setPlayingMusic(null)}
@@ -269,6 +271,14 @@ function App() {
         </div>
       )}
     </div>
+  );
+}
+
+function App() {
+  return (
+    <ThemeProvider>
+      <AppContent />
+    </ThemeProvider>
   );
 }
 
