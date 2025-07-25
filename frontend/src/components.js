@@ -596,8 +596,202 @@ export const Feed = ({ posts, stories, onLike, onComment, onChat, playingMusic, 
   );
 };
 
-// Character Profile Component
-export const CharacterProfile = ({ character, posts, onChat, onFollow }) => {
+// Music Creation Component
+export const MusicCreationPage = ({ onCreateMusic }) => {
+  const [prompt, setPrompt] = useState('');
+  const [genre, setGenre] = useState('Lo-fi');
+  const [mood, setMood] = useState('Relaxing');
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  const genres = ['Lo-fi', 'Electronic', 'Ambient', 'Romantic', 'Jazz', 'Classical', 'Pop', 'Rock'];
+  const moods = ['Relaxing', 'Energetic', 'Inspirational', 'Romantic', 'Melancholic', 'Upbeat', 'Dreamy'];
+
+  const handleGenerate = () => {
+    if (!prompt.trim()) return;
+    
+    setIsGenerating(true);
+    
+    // Simulate music generation
+    setTimeout(() => {
+      const newMusic = {
+        id: Date.now(),
+        title: prompt.split(' ').slice(0, 3).join(' '),
+        artist: 'You',
+        genre,
+        mood,
+        prompt,
+        duration: '3:' + (Math.floor(Math.random() * 60)).toString().padStart(2, '0'),
+        coverArt: 'https://images.unsplash.com/photo-1557682268-e3955ed5d83f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1NzZ8MHwxfHNlYXJjaHwyfHxncmFkaWVudCUyMGJhY2tncm91bmR8ZW58MHx8fHB1cnBsZXwxNzUzNDU0NzMwfDA&ixlib=rb-4.1.0&q=85',
+        plays: 0,
+        likes: 0,
+        createdAt: 'now'
+      };
+      
+      onCreateMusic(newMusic);
+      setIsGenerating(false);
+      setPrompt('');
+    }, 3000);
+  };
+
+  return (
+    <div className="max-w-lg mx-auto p-6">
+      <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <div className="text-center mb-6">
+          <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">Create Music with Suno AI</h2>
+          <p className="text-gray-600">Describe the music you want to create</p>
+        </div>
+
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Describe your music
+            </label>
+            <textarea
+              value={prompt}
+              onChange={(e) => setPrompt(e.target.value)}
+              placeholder="e.g., Create a relaxing lo-fi track perfect for studying with gentle piano melodies"
+              rows={4}
+              className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Genre</label>
+              <select
+                value={genre}
+                onChange={(e) => setGenre(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              >
+                {genres.map(g => (
+                  <option key={g} value={g}>{g}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Mood</label>
+              <select
+                value={mood}
+                onChange={(e) => setMood(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              >
+                {moods.map(m => (
+                  <option key={m} value={m}>{m}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <button
+            onClick={handleGenerate}
+            disabled={!prompt.trim() || isGenerating}
+            className="w-full bg-purple-600 hover:bg-purple-700 disabled:bg-gray-300 text-white py-3 px-6 rounded-lg font-medium transition-colors flex items-center justify-center gap-3"
+          >
+            {isGenerating ? (
+              <>
+                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                Generating Music...
+              </>
+            ) : (
+              <>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                </svg>
+                Generate Music
+              </>
+            )}
+          </button>
+        </div>
+
+        <div className="mt-6 pt-4 border-t border-gray-100">
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>Generated music will be shared to your feed automatically</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Music Discovery Page
+export const MusicDiscoveryPage = ({ music, onMusicSelect, playingMusic, onPlayMusic }) => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedGenre, setSelectedGenre] = useState('All');
+  
+  const genres = ['All', 'Lo-fi', 'Electronic', 'Ambient', 'Romantic', 'Jazz'];
+  
+  const filteredMusic = music.filter(track => {
+    const matchesSearch = track.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         track.artist.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesGenre = selectedGenre === 'All' || track.genre === selectedGenre;
+    return matchesSearch && matchesGenre;
+  });
+
+  return (
+    <div className="max-w-4xl mx-auto p-4">
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold mb-4">Discover Music</h1>
+        
+        {/* Search Bar */}
+        <div className="relative mb-4">
+          <svg className="absolute left-3 top-3 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <input
+            type="text"
+            placeholder="Search music..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+          />
+        </div>
+        
+        {/* Genre Filters */}
+        <div className="flex gap-2 overflow-x-auto">
+          {genres.map((g) => (
+            <button
+              key={g}
+              onClick={() => setSelectedGenre(g)}
+              className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
+                selectedGenre === g
+                  ? 'bg-purple-600 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              {g}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Music Grid */}
+      <div className="space-y-4">
+        {filteredMusic.map((track) => (
+          <MusicPlayer
+            key={track.id}
+            music={track}
+            isPlaying={playingMusic && playingMusic.id === track.id}
+            onPlayPause={() => onPlayMusic(track)}
+            currentTime={playingMusic?.id === track.id ? (playingMusic.currentTime || 0) : 0}
+            duration={180}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Character Profile Component (Updated to show music)
+export const CharacterProfile = ({ character, posts, onChat, onFollow, playingMusic, onPlayMusic }) => {
   const [isFollowing, setIsFollowing] = useState(false);
   
   const handleFollow = () => {
