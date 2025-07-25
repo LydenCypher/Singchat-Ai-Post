@@ -8,17 +8,22 @@ import {
   CharacterProfile,
   ChatInterface,
   BottomNavigation,
+  MusicCreationPage,
+  MusicDiscoveryPage,
   mockCharacters,
   mockPosts,
-  mockStories
+  mockStories,
+  mockMusic
 } from './components';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentPage, setCurrentPage] = useState('feed');
   const [posts, setPosts] = useState(mockPosts);
+  const [music, setMusic] = useState(mockMusic);
   const [selectedCharacter, setSelectedCharacter] = useState(null);
   const [isInChat, setIsInChat] = useState(false);
+  const [playingMusic, setPlayingMusic] = useState(null);
 
   // Handle landing page entry
   const handleEnter = () => {
@@ -43,6 +48,46 @@ function App() {
   // Handle post comment (placeholder)
   const handleComment = (postId) => {
     console.log('Comment on post:', postId);
+  };
+
+  // Handle music playback
+  const handlePlayMusic = (musicTrack) => {
+    if (playingMusic && playingMusic.id === musicTrack.id) {
+      // Pause current track
+      setPlayingMusic(null);
+    } else {
+      // Play new track
+      setPlayingMusic({
+        ...musicTrack,
+        currentTime: 0,
+        isPlaying: true
+      });
+    }
+  };
+
+  // Handle music creation
+  const handleCreateMusic = (newMusic) => {
+    // Add to music library
+    setMusic(prev => [newMusic, ...prev]);
+    
+    // Create a new post for the music
+    const musicPost = {
+      id: Date.now(),
+      characterId: 1, // Default to current user
+      character: mockCharacters[0], // Default character
+      type: 'music',
+      content: `Just created a new ${newMusic.genre} track! What do you think?`,
+      music: newMusic,
+      likes: 0,
+      comments: 0,
+      timestamp: 'now',
+      isLiked: false
+    };
+    
+    setPosts(prev => [musicPost, ...prev]);
+    
+    // Navigate to feed to see the new post
+    setCurrentPage('feed');
   };
 
   // Handle character chat
@@ -123,6 +168,8 @@ function App() {
               onLike={handleLike}
               onComment={handleComment}
               onChat={handleChat}
+              playingMusic={playingMusic}
+              onPlayMusic={handlePlayMusic}
             />
           )}
 
@@ -133,32 +180,26 @@ function App() {
             />
           )}
 
+          {currentPage === 'music' && (
+            <div className="space-y-6">
+              <MusicCreationPage onCreateMusic={handleCreateMusic} />
+              <MusicDiscoveryPage
+                music={music}
+                playingMusic={playingMusic}
+                onPlayMusic={handlePlayMusic}
+              />
+            </div>
+          )}
+
           {currentPage === 'profile' && selectedCharacter && (
             <CharacterProfile
               character={selectedCharacter}
               posts={posts}
               onChat={handleChat}
               onFollow={handleFollow}
+              playingMusic={playingMusic}
+              onPlayMusic={handlePlayMusic}
             />
-          )}
-
-          {currentPage === 'create' && (
-            <div className="max-w-lg mx-auto p-8 text-center">
-              <div className="bg-white rounded-lg p-8 border border-gray-200">
-                <div className="mb-6">
-                  <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <svg className="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                    </svg>
-                  </div>
-                  <h2 className="text-xl font-bold text-gray-800">Create Character</h2>
-                  <p className="text-gray-600 mt-2">Design your own AI character</p>
-                </div>
-                <button className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
-                  Start Creating
-                </button>
-              </div>
-            </div>
           )}
 
           {currentPage === 'messages' && (
@@ -203,6 +244,27 @@ function App() {
         currentPage={currentPage}
         onPageChange={handlePageChange}
       />
+
+      {/* Global Music Player (if music is playing) */}
+      {playingMusic && (
+        <div className="fixed bottom-16 left-0 right-0 bg-purple-600 text-white px-4 py-2 shadow-lg">
+          <div className="max-w-lg mx-auto flex items-center gap-3">
+            <button
+              onClick={() => setPlayingMusic(null)}
+              className="text-white hover:text-purple-200"
+            >
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
+              </svg>
+            </button>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium truncate">{playingMusic.title}</p>
+              <p className="text-xs text-purple-200 truncate">{playingMusic.artist}</p>
+            </div>
+            <div className="text-xs">♪ Playing</div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
