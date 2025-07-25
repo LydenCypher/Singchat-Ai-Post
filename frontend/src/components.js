@@ -1,4 +1,156 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, createContext, useContext } from 'react';
+
+// Theme Configuration
+const themes = {
+  purple: {
+    name: 'Purple Fusion',
+    colors: {
+      primary: 'purple-600',
+      primaryDark: 'purple-700',
+      primaryLight: 'purple-400',
+      secondary: 'pink-500',
+      accent: 'indigo-500',
+      background: 'purple-50',
+      gradientFrom: 'purple-400',
+      gradientTo: 'pink-400',
+      gradientBg: 'from-purple-900/80 via-transparent to-indigo-900/80'
+    }
+  },
+  blue: {
+    name: 'Ocean Blue',
+    colors: {
+      primary: 'blue-600',
+      primaryDark: 'blue-700',
+      primaryLight: 'blue-400',
+      secondary: 'cyan-500',
+      accent: 'teal-500',
+      background: 'blue-50',
+      gradientFrom: 'blue-400',
+      gradientTo: 'cyan-400',
+      gradientBg: 'from-blue-900/80 via-transparent to-cyan-900/80'
+    }
+  },
+  green: {
+    name: 'Nature Green',
+    colors: {
+      primary: 'green-600',
+      primaryDark: 'green-700',
+      primaryLight: 'green-400',
+      secondary: 'emerald-500',
+      accent: 'lime-500',
+      background: 'green-50',
+      gradientFrom: 'green-400',
+      gradientTo: 'emerald-400',
+      gradientBg: 'from-green-900/80 via-transparent to-emerald-900/80'
+    }
+  },
+  orange: {
+    name: 'Sunset Orange',
+    colors: {
+      primary: 'orange-600',
+      primaryDark: 'orange-700',
+      primaryLight: 'orange-400',
+      secondary: 'red-500',
+      accent: 'yellow-500',
+      background: 'orange-50',
+      gradientFrom: 'orange-400',
+      gradientTo: 'red-400',
+      gradientBg: 'from-orange-900/80 via-transparent to-red-900/80'
+    }
+  },
+  dark: {
+    name: 'Dark Mode',
+    colors: {
+      primary: 'gray-700',
+      primaryDark: 'gray-800',
+      primaryLight: 'gray-500',
+      secondary: 'slate-600',
+      accent: 'zinc-600',
+      background: 'gray-900',
+      gradientFrom: 'gray-600',
+      gradientTo: 'slate-600',
+      gradientBg: 'from-gray-900/90 via-transparent to-slate-900/90'
+    }
+  }
+};
+
+// Theme Context
+const ThemeContext = createContext();
+
+export const ThemeProvider = ({ children }) => {
+  const [currentTheme, setCurrentTheme] = useState('purple');
+  const theme = themes[currentTheme];
+
+  const switchTheme = (themeKey) => {
+    setCurrentTheme(themeKey);
+    localStorage.setItem('singchat-theme', themeKey);
+  };
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('singchat-theme');
+    if (savedTheme && themes[savedTheme]) {
+      setCurrentTheme(savedTheme);
+    }
+  }, []);
+
+  return (
+    <ThemeContext.Provider value={{ theme, currentTheme, switchTheme, themes }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+};
+
+export const useTheme = () => {
+  const context = useContext(ThemeContext);
+  if (!context) {
+    throw new Error('useTheme must be used within a ThemeProvider');
+  }
+  return context;
+};
+
+// Theme Selector Component
+export const ThemeSelector = () => {
+  const { currentTheme, switchTheme, themes } = useTheme();
+
+  return (
+    <div className="fixed top-4 right-20 z-50">
+      <div className="relative">
+        <button 
+          className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-full p-2 text-white hover:bg-white/20 transition-colors"
+          title="Change Theme"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v6a2 2 0 002 2h4a2 2 0 002-2V5z" />
+          </svg>
+        </button>
+        <div className="absolute top-full right-0 mt-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg p-2 min-w-40">
+          {Object.entries(themes).map(([key, theme]) => (
+            <button
+              key={key}
+              onClick={() => switchTheme(key)}
+              className={`w-full text-left px-3 py-2 rounded-md text-sm text-white hover:bg-white/10 transition-colors flex items-center gap-2 ${
+                currentTheme === key ? 'bg-white/20' : ''
+              }`}
+            >
+              <div className={`w-3 h-3 rounded-full bg-${theme.colors.primary}`}></div>
+              {theme.name}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Free Badge Component
+export const FreeBadge = () => (
+  <div className="inline-flex items-center gap-1 px-2 py-1 bg-green-500 text-white text-xs font-medium rounded-full">
+    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+    </svg>
+    FREE
+  </div>
+);
 
 // Mock music data
 const mockMusic = [
