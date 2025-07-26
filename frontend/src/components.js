@@ -1,6 +1,46 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
 
-// Theme Configuration
+// Custom Background System
+const backgroundThemes = {
+  cosmic: {
+    name: 'Cosmic Space',
+    gradient: 'bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900',
+    image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2000',
+    animation: 'animate-pulse'
+  },
+  cyberpunk: {
+    name: 'Cyberpunk City',
+    gradient: 'bg-gradient-to-br from-pink-900 via-purple-900 to-cyan-900', 
+    image: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?q=80&w=2000',
+    animation: 'animate-bounce'
+  },
+  forest: {
+    name: 'Mystic Forest',
+    gradient: 'bg-gradient-to-br from-green-900 via-emerald-900 to-teal-900',
+    image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=2000',
+    animation: ''
+  },
+  ocean: {
+    name: 'Deep Ocean',
+    gradient: 'bg-gradient-to-br from-blue-900 via-teal-900 to-cyan-900',
+    image: 'https://images.unsplash.com/photo-1439066615861-d1af74d74000?q=80&w=2000',
+    animation: 'animate-pulse'
+  },
+  anime: {
+    name: 'Anime City',
+    gradient: 'bg-gradient-to-br from-pink-900 via-rose-900 to-orange-900',
+    image: 'https://images.unsplash.com/photo-1596332996407-d8d5d3b60e8e?q=80&w=2000',
+    animation: ''
+  },
+  gaming: {
+    name: 'Gaming Arena',
+    gradient: 'bg-gradient-to-br from-red-900 via-orange-900 to-yellow-900',
+    image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2000',
+    animation: 'animate-pulse'
+  }
+};
+
+// Theme Configuration (Enhanced)
 const themes = {
   purple: {
     name: 'Purple Fusion',
@@ -13,7 +53,33 @@ const themes = {
       background: 'purple-50',
       gradientFrom: 'purple-400',
       gradientTo: 'pink-400',
-      gradientBg: 'from-purple-900/80 via-transparent to-indigo-900/80'
+      gradientBg: 'from-purple-900/80 via-transparent to-indigo-900/80',
+      discord: {
+        sidebar: 'bg-gray-800',
+        serverList: 'bg-gray-900',
+        channelList: 'bg-gray-700',
+        chatArea: 'bg-gray-600'
+      }
+    }
+  },
+  discord: {
+    name: 'Discord Dark',
+    colors: {
+      primary: 'indigo-600',
+      primaryDark: 'indigo-700', 
+      primaryLight: 'indigo-400',
+      secondary: 'blue-500',
+      accent: 'purple-500',
+      background: 'gray-800',
+      gradientFrom: 'indigo-400',
+      gradientTo: 'blue-400',
+      gradientBg: 'from-gray-900/80 via-transparent to-indigo-900/80',
+      discord: {
+        sidebar: 'bg-gray-800',
+        serverList: 'bg-gray-900', 
+        channelList: 'bg-gray-700',
+        chatArea: 'bg-gray-600'
+      }
     }
   },
   blue: {
@@ -27,7 +93,13 @@ const themes = {
       background: 'blue-50',
       gradientFrom: 'blue-400',
       gradientTo: 'cyan-400',
-      gradientBg: 'from-blue-900/80 via-transparent to-cyan-900/80'
+      gradientBg: 'from-blue-900/80 via-transparent to-cyan-900/80',
+      discord: {
+        sidebar: 'bg-blue-800',
+        serverList: 'bg-blue-900',
+        channelList: 'bg-blue-700', 
+        chatArea: 'bg-blue-600'
+      }
     }
   },
   green: {
@@ -35,13 +107,19 @@ const themes = {
     colors: {
       primary: 'green-600',
       primaryDark: 'green-700',
-      primaryLight: 'green-400',
+      primaryLight: 'green-400', 
       secondary: 'emerald-500',
       accent: 'lime-500',
       background: 'green-50',
       gradientFrom: 'green-400',
       gradientTo: 'emerald-400',
-      gradientBg: 'from-green-900/80 via-transparent to-emerald-900/80'
+      gradientBg: 'from-green-900/80 via-transparent to-emerald-900/80',
+      discord: {
+        sidebar: 'bg-green-800',
+        serverList: 'bg-green-900',
+        channelList: 'bg-green-700',
+        chatArea: 'bg-green-600'
+      }
     }
   },
   orange: {
@@ -55,7 +133,13 @@ const themes = {
       background: 'orange-50',
       gradientFrom: 'orange-400',
       gradientTo: 'red-400',
-      gradientBg: 'from-orange-900/80 via-transparent to-red-900/80'
+      gradientBg: 'from-orange-900/80 via-transparent to-red-900/80',
+      discord: {
+        sidebar: 'bg-orange-800',
+        serverList: 'bg-orange-900',
+        channelList: 'bg-orange-700',
+        chatArea: 'bg-orange-600'
+      }
     }
   },
   dark: {
@@ -69,7 +153,13 @@ const themes = {
       background: 'gray-900',
       gradientFrom: 'gray-600',
       gradientTo: 'slate-600',
-      gradientBg: 'from-gray-900/90 via-transparent to-slate-900/90'
+      gradientBg: 'from-gray-900/90 via-transparent to-slate-900/90',
+      discord: {
+        sidebar: 'bg-gray-800',
+        serverList: 'bg-gray-900',
+        channelList: 'bg-gray-700',
+        chatArea: 'bg-gray-600'
+      }
     }
   }
 };
