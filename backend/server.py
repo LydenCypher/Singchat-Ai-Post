@@ -158,7 +158,12 @@ async def get_music_status(music_id: str):
     """Check the status of a music generation request"""
     try:
         # Get music entry from database
-        music_entry = await db.music.find_one({"_id": music_id})
+        try:
+            music_entry = await db.music.find_one({"_id": ObjectId(music_id)})
+        except:
+            # If music_id is not a valid ObjectId, try as string
+            music_entry = await db.music.find_one({"id": music_id})
+        
         if not music_entry:
             raise HTTPException(status_code=404, detail="Music entry not found")
         
