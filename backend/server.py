@@ -45,6 +45,29 @@ class StatusCheck(BaseModel):
 class StatusCheckCreate(BaseModel):
     client_name: str
 
+# Music Generation Models
+class MusicRequest(BaseModel):
+    prompt: str
+    title: Optional[str] = None
+    tags: Optional[str] = None
+    make_instrumental: bool = False
+    user_id: str
+
+class MusicResponse(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    prompt: str
+    title: Optional[str] = None
+    tags: Optional[str] = None
+    make_instrumental: bool = False
+    status: str = "processing"  # processing, completed, failed
+    suno_ids: Optional[List[str]] = []
+    audio_urls: Optional[List[str]] = []
+    video_urls: Optional[List[str]] = []
+    image_urls: Optional[List[str]] = []
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
 # Add your routes to the router instead of directly to app
 @api_router.get("/")
 async def root():
