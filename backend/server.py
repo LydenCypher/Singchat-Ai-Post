@@ -229,6 +229,9 @@ async def get_music_status(music_id: str):
         
         return music_entry
         
+    except HTTPException:
+        # Re-raise HTTPExceptions so they're handled properly by FastAPI
+        raise
     except Exception as e:
         logger.error(f"Error checking music status: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
