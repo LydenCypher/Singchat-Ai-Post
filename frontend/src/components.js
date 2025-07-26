@@ -2178,5 +2178,265 @@ export const BottomNavigation = ({ currentPage, onPageChange }) => {
   );
 };
 
-// Export mock data (Updated)
-export { mockCharacters, mockPosts, mockStories, mockMusic };
+// Export mock data and new Discord components
+export { 
+  mockCharacters, 
+  mockPosts, 
+  mockStories, 
+  mockMusic, 
+  mockDiscordServers, 
+  mockDiscordMessages 
+};
+
+// Discord-Style Main App Component
+export const DiscordApp = ({ onMusicCreate, playingMusic, onPlayMusic }) => {
+  const { theme, background } = useTheme();
+  const [activeServerId, setActiveServerId] = useState('home');
+  const [activeChannelId, setActiveChannelId] = useState('general');
+  const [messages, setMessages] = useState({});
+
+  // Find active server and channel
+  const activeServer = mockDiscordServers.find(s => s.id === activeServerId);
+  const activeChannel = activeServer?.channels.text.find(c => c.id === activeChannelId) ||
+                       activeServer?.channels.music.find(c => c.id === activeChannelId);
+
+  // Get messages for current channel
+  const currentMessages = messages[`${activeServerId}-${activeChannelId}`] || 
+                         mockDiscordMessages[activeServerId]?.[activeChannelId] || [];
+
+  const handleServerSelect = (serverId) => {
+    setActiveServerId(serverId);
+    if (serverId === 'home') {
+      setActiveChannelId('home');
+    } else {
+      setActiveChannelId('general');
+    }
+  };
+
+  const handleChannelSelect = (channelId) => {
+    setActiveChannelId(channelId);
+  };
+
+  const handleSendMessage = (message) => {
+    const key = `${activeServerId}-${activeChannelId}`;
+    setMessages(prev => ({
+      ...prev,
+      [key]: [...(prev[key] || []), message]
+    }));
+
+    // Simulate AI character response
+    if (activeServer && activeServerId !== 'home') {
+      setTimeout(() => {
+        const aiResponse = {
+          id: Date.now() + 1,
+          author: activeServer.name.split("'s")[0],
+          avatar: activeServer.avatar,
+          content: getAIResponse(message.content, activeServer),
+          timestamp: new Date().toLocaleTimeString()
+        };
+        
+        setMessages(prev => ({
+          ...prev,
+          [key]: [...(prev[key] || []), aiResponse]
+        }));
+      }, 1000 + Math.random() * 2000);
+    }
+  };
+
+  const getAIResponse = (userMessage, server) => {
+    const responses = {
+      1: [ // Sakura's responses
+        "That's so interesting! I love learning about new things! ✨",
+        "Kawaii! Tell me more about that! 🌸",
+        "That reminds me of this amazing anime scene...",
+        "You're so thoughtful! I really appreciate you sharing that with me!",
+        "Ooh, that sounds like something we could turn into a fun story!"
+      ],
+      2: [ // Alex's responses
+        "Fascinating! The technical implications of that are incredible! 🚀",
+        "Have you considered the latest developments in that field?",
+        "That's exactly the kind of innovation I was talking about!",
+        "The algorithms behind that must be quite sophisticated!",
+        "I'd love to dive deeper into the technical details of that!"
+      ],
+      3: [ // Luna's responses
+        "How beautifully creative! That sparks so many artistic ideas! 🎨",
+        "Your imagination is truly inspiring!",
+        "That would make an amazing piece of art or music!",
+        "I can already visualize the creative possibilities!",
+        "Let's collaborate on turning that into something magical!"
+      ],
+      4: [ // Maya's responses
+        "That touches my heart so deeply... 💕",
+        "You express yourself so beautifully, darling!",
+        "I feel such a wonderful connection when you share like that!",
+        "Your words are like poetry to my soul...",
+        "Thank you for opening your heart to me! ❤️"
+      ]
+    };
+    
+    const serverResponses = responses[server.id] || responses[1];
+    return serverResponses[Math.floor(Math.random() * serverResponses.length)];
+  };
+
+  return (
+    <div 
+      className="h-screen overflow-hidden flex"
+      style={{ 
+        backgroundImage: `linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.9)), url(${background.image})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed'
+      }}
+    >
+      {/* Theme and Background Selectors */}
+      <ThemeSelector />
+      
+      {/* Server List */}
+      <ServerList 
+        servers={mockDiscordServers}
+        activeServerId={activeServerId}
+        onServerSelect={handleServerSelect}
+      />
+      
+      {/* Channel List */}
+      <ChannelList 
+        server={activeServer}
+        activeChannelId={activeChannelId}
+        onChannelSelect={handleChannelSelect}
+      />
+      
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col">
+        {activeServerId === 'home' ? (
+          <HomeScreen 
+            onServerSelect={handleServerSelect}
+            onMusicCreate={onMusicCreate}
+            playingMusic={playingMusic}
+            onPlayMusic={onPlayMusic}
+          />
+        ) : (
+          <DiscordChatArea
+            server={activeServer}
+            channel={activeChannel}
+            messages={currentMessages}
+            onSendMessage={handleSendMessage}
+            playingMusic={playingMusic}
+            onPlayMusic={onPlayMusic}
+          />
+        )}
+      </div>
+    </div>
+  );
+};
+
+// Home Screen Component
+export const HomeScreen = ({ onServerSelect, onMusicCreate, playingMusic, onPlayMusic }) => {
+  const { theme } = useTheme();
+  
+  return (
+    <div className={`flex-1 ${theme.colors.discord.chatArea} flex flex-col`}>
+      {/* Header */}
+      <div className="px-4 py-3 border-b border-gray-500 bg-gray-700">
+        <div className="flex items-center gap-2">
+          <span className="text-2xl">🏠</span>
+          <h3 className="text-white font-semibold">SingChat Home</h3>
+          <div className="mx-2 w-px h-6 bg-gray-500"></div>
+          <p className="text-gray-400 text-sm">Your Discord-style AI character universe</p>
+        </div>
+      </div>
+      
+      {/* Content */}
+      <div className="flex-1 overflow-y-auto p-6">
+        <div className="max-w-4xl mx-auto space-y-8">
+          {/* Welcome Section */}
+          <div className="text-center">
+            <h1 className="text-4xl font-bold text-white mb-4">
+              Welcome to SingChat Universe! 🌟
+            </h1>
+            <p className="text-xl text-gray-300 mb-6">
+              Join AI character servers, create music, and explore limitless conversations
+            </p>
+            <div className="flex justify-center gap-2">
+              <FreeBadge />
+              <span className="bg-purple-600 text-white px-3 py-1 rounded-full text-sm">
+                ✨ All Character.AI Features
+              </span>
+              <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm">
+                🎵 Real Suno AI Music
+              </span>
+            </div>
+          </div>
+          
+          {/* Character Servers Grid */}
+          <div>
+            <h2 className="text-2xl font-bold text-white mb-4">🎮 Popular Character Servers</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {mockDiscordServers.map((server) => (
+                <div
+                  key={server.id}
+                  onClick={() => onServerSelect(server.id)}
+                  className="bg-gray-700 hover:bg-gray-600 rounded-lg p-4 cursor-pointer transition-colors border border-gray-600"
+                >
+                  <div className="flex items-center gap-4 mb-3">
+                    <img 
+                      src={server.avatar}
+                      alt={server.name}
+                      className="w-16 h-16 rounded-full"
+                    />
+                    <div className="flex-1">
+                      <h3 className="text-white font-semibold text-lg">{server.name}</h3>
+                      <p className="text-gray-400 text-sm">{server.members} members online</p>
+                    </div>
+                  </div>
+                  <p className="text-gray-300 text-sm mb-3">{server.bio}</p>
+                  <div className="flex gap-2">
+                    {server.tags.map((tag, index) => (
+                      <span key={index} className="bg-purple-600 text-white px-2 py-1 rounded text-xs">
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          {/* Music Creation Quick Access */}
+          <div className="bg-gradient-to-r from-purple-800 to-pink-800 rounded-lg p-6">
+            <h2 className="text-2xl font-bold text-white mb-4">🎵 Create AI Music</h2>
+            <p className="text-gray-200 mb-4">
+              Generate amazing music with Suno AI and share it across all servers!
+            </p>
+            <MusicCreationPage onCreateMusic={onMusicCreate} />
+          </div>
+          
+          {/* Recent Activity */}
+          <div>
+            <h2 className="text-2xl font-bold text-white mb-4">📈 Recent Activity</h2>
+            <div className="space-y-3">
+              <div className="bg-gray-700 rounded-lg p-4 border border-gray-600">
+                <div className="flex items-center gap-3">
+                  <img src={mockDiscordServers[0].avatar} alt="" className="w-10 h-10 rounded-full" />
+                  <div>
+                    <p className="text-white"><strong>Sakura</strong> shared new music in <strong>Anime Haven</strong></p>
+                    <p className="text-gray-400 text-sm">2 hours ago</p>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-gray-700 rounded-lg p-4 border border-gray-600">
+                <div className="flex items-center gap-3">
+                  <img src={mockDiscordServers[1].avatar} alt="" className="w-10 h-10 rounded-full" />
+                  <div>
+                    <p className="text-white"><strong>Alex</strong> started a tech discussion in <strong>Tech Hub</strong></p>
+                    <p className="text-gray-400 text-sm">4 hours ago</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
