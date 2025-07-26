@@ -164,27 +164,48 @@ const themes = {
   }
 };
 
-// Theme Context
+// Theme Context (Enhanced with Backgrounds)
 const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-  const [currentTheme, setCurrentTheme] = useState('purple');
+  const [currentTheme, setCurrentTheme] = useState('discord');
+  const [currentBackground, setCurrentBackground] = useState('cosmic');
   const theme = themes[currentTheme];
+  const background = backgroundThemes[currentBackground];
 
   const switchTheme = (themeKey) => {
     setCurrentTheme(themeKey);
     localStorage.setItem('singchat-theme', themeKey);
   };
 
+  const switchBackground = (backgroundKey) => {
+    setCurrentBackground(backgroundKey);
+    localStorage.setItem('singchat-background', backgroundKey);
+  };
+
   useEffect(() => {
     const savedTheme = localStorage.getItem('singchat-theme');
+    const savedBackground = localStorage.getItem('singchat-background');
+    
     if (savedTheme && themes[savedTheme]) {
       setCurrentTheme(savedTheme);
+    }
+    if (savedBackground && backgroundThemes[savedBackground]) {
+      setCurrentBackground(savedBackground);
     }
   }, []);
 
   return (
-    <ThemeContext.Provider value={{ theme, currentTheme, switchTheme, themes }}>
+    <ThemeContext.Provider value={{ 
+      theme, 
+      currentTheme, 
+      switchTheme, 
+      themes,
+      background,
+      currentBackground,
+      switchBackground,
+      backgroundThemes
+    }}>
       {children}
     </ThemeContext.Provider>
   );
