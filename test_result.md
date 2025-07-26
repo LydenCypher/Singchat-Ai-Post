@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Test the SingChat ai post fusion app that combines Character.AI, Crushon.AI, Instagram features, and Suno AI music creation with custom themes"
+user_problem_statement: "Test the SingChat ai post fusion app that combines Character.AI, Crushon.AI, Instagram features, and Suno AI music creation with custom themes. MAJOR UPGRADE: Replace Instagram with Discord, add real Suno AI integration, custom character creation, video creation for YouTube upload, Google integration, and customizable backgrounds."
 
 frontend:
   - task: "Landing Page Experience"
