@@ -199,16 +199,29 @@ async def get_music_status(music_id: str):
             
             # Update database if all clips are completed
             if all_completed and audio_urls:
-                await db.music.update_one(
-                    {"_id": music_id},
-                    {"$set": {
-                        "status": "completed",
-                        "audio_urls": audio_urls,
-                        "video_urls": video_urls,
-                        "image_urls": image_urls,
-                        "updated_at": datetime.utcnow()
-                    }}
-                )
+                try:
+                    await db.music.update_one(
+                        {"_id": ObjectId(music_id)},
+                        {"$set": {
+                            "status": "completed",
+                            "audio_urls": audio_urls,
+                            "video_urls": video_urls,
+                            "image_urls": image_urls,
+                            "updated_at": datetime.utcnow()
+                        }}
+                    )
+                except:
+                    # If music_id is not a valid ObjectId, try as string
+                    await db.music.update_one(
+                        {"id": music_id},
+                        {"$set": {
+                            "status": "completed",
+                            "audio_urls": audio_urls,
+                            "video_urls": video_urls,
+                            "image_urls": image_urls,
+                            "updated_at": datetime.utcnow()
+                        }}
+                    )
                 music_entry["status"] = "completed"
                 music_entry["audio_urls"] = audio_urls
                 music_entry["video_urls"] = video_urls
