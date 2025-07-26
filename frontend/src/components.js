@@ -301,15 +301,163 @@ export const ThemeSelector = () => {
   );
 };
 
-// Free Badge Component
-export const FreeBadge = () => (
-  <div className="inline-flex items-center gap-1 px-2 py-1 bg-green-500 text-white text-xs font-medium rounded-full">
-    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-    </svg>
-    FREE
-  </div>
-);
+// Discord-Style Server List Component
+export const ServerList = ({ servers, activeServerId, onServerSelect }) => {
+  const { theme } = useTheme();
+  
+  return (
+    <div className={`w-16 ${theme.colors.discord.serverList} flex flex-col items-center py-3 space-y-2 border-r border-gray-600`}>
+      {/* Home Server */}
+      <div 
+        onClick={() => onServerSelect('home')}
+        className={`w-12 h-12 rounded-full cursor-pointer transition-all duration-200 flex items-center justify-center text-white font-bold text-lg hover:rounded-xl ${
+          activeServerId === 'home' ? 'rounded-xl bg-indigo-600' : 'bg-gray-700 hover:bg-gray-600'
+        }`}
+      >
+        🏠
+      </div>
+      
+      {/* Server Divider */}
+      <div className="w-8 h-0.5 bg-gray-600 rounded-full"></div>
+      
+      {/* Character Servers */}
+      {servers.map((server) => (
+        <div key={server.id} className="relative group">
+          <div 
+            onClick={() => onServerSelect(server.id)}
+            className={`w-12 h-12 rounded-full cursor-pointer transition-all duration-200 overflow-hidden hover:rounded-xl ${
+              activeServerId === server.id ? 'rounded-xl' : ''
+            }`}
+          >
+            <img 
+              src={server.avatar} 
+              alt={server.name}
+              className="w-full h-full object-cover"
+            />
+          </div>
+          
+          {/* Server Tooltip */}
+          <div className="absolute left-full ml-2 top-0 bg-black text-white px-2 py-1 rounded text-sm whitespace-nowrap z-50 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+            {server.name}
+          </div>
+        </div>
+      ))}
+      
+      {/* Add Server Button */}
+      <div className="w-12 h-12 rounded-full bg-gray-700 hover:bg-green-600 cursor-pointer transition-all duration-200 flex items-center justify-center text-green-400 hover:text-white hover:rounded-xl">
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+        </svg>
+      </div>
+    </div>
+  );
+};
+
+// Discord-Style Channel List Component  
+export const ChannelList = ({ server, activeChannelId, onChannelSelect }) => {
+  const { theme } = useTheme();
+  
+  if (!server) return null;
+  
+  return (
+    <div className={`w-60 ${theme.colors.discord.channelList} flex flex-col border-r border-gray-600`}>
+      {/* Server Header */}
+      <div className="px-4 py-3 border-b border-gray-600 bg-gray-600">
+        <h2 className="text-white font-semibold truncate flex items-center gap-2">
+          <img src={server.avatar} alt={server.name} className="w-6 h-6 rounded-full" />
+          {server.name}
+        </h2>
+        <p className="text-gray-300 text-xs mt-1">{server.members} members online</p>
+      </div>
+      
+      {/* Channels */}
+      <div className="flex-1 overflow-y-auto py-2">
+        {/* Text Channels */}
+        <div className="px-2 mb-4">
+          <div className="flex items-center justify-between px-2 py-1 text-gray-400 text-xs font-semibold uppercase tracking-wide">
+            <span>💬 Chat Channels</span>
+          </div>
+          
+          {server.channels.text.map((channel) => (
+            <div
+              key={channel.id}
+              onClick={() => onChannelSelect(channel.id)}
+              className={`mx-1 px-2 py-1 rounded cursor-pointer flex items-center gap-2 text-gray-300 hover:bg-gray-600 hover:text-white transition-colors ${
+                activeChannelId === channel.id ? 'bg-gray-600 text-white' : ''
+              }`}
+            >
+              <span className="text-gray-400">#</span>
+              <span className="text-sm">{channel.name}</span>
+              {channel.unread && (
+                <div className="ml-auto w-2 h-2 bg-red-500 rounded-full"></div>
+              )}
+            </div>
+          ))}
+        </div>
+        
+        {/* Voice Channels */}
+        <div className="px-2 mb-4">
+          <div className="flex items-center justify-between px-2 py-1 text-gray-400 text-xs font-semibold uppercase tracking-wide">
+            <span>🔊 Voice Channels</span>
+          </div>
+          
+          {server.channels.voice.map((channel) => (
+            <div
+              key={channel.id}
+              onClick={() => onChannelSelect(channel.id)}
+              className={`mx-1 px-2 py-1 rounded cursor-pointer flex items-center gap-2 text-gray-300 hover:bg-gray-600 hover:text-white transition-colors ${
+                activeChannelId === channel.id ? 'bg-gray-600 text-white' : ''
+              }`}
+            >
+              <span className="text-gray-400">🔊</span>
+              <span className="text-sm">{channel.name}</span>
+              <span className="ml-auto text-xs text-gray-500">{channel.users || 0}</span>
+            </div>
+          ))}
+        </div>
+        
+        {/* Music Channels */}
+        <div className="px-2">
+          <div className="flex items-center justify-between px-2 py-1 text-gray-400 text-xs font-semibold uppercase tracking-wide">
+            <span>🎵 Music Channels</span>
+          </div>
+          
+          {server.channels.music.map((channel) => (
+            <div
+              key={channel.id}
+              onClick={() => onChannelSelect(channel.id)}
+              className={`mx-1 px-2 py-1 rounded cursor-pointer flex items-center gap-2 text-gray-300 hover:bg-gray-600 hover:text-white transition-colors ${
+                activeChannelId === channel.id ? 'bg-gray-600 text-white' : ''
+              }`}
+            >
+              <span className="text-gray-400">🎵</span>
+              <span className="text-sm">{channel.name}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      {/* User Info Bar */}
+      <div className="p-2 bg-gray-800 border-t border-gray-600">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center text-white text-sm font-bold">
+            You
+          </div>
+          <div className="flex-1">
+            <div className="text-white text-sm font-medium">Your Username</div>
+            <div className="text-gray-400 text-xs">Online</div>
+          </div>
+          <button className="text-gray-400 hover:text-white p-1">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 // Mock music data
 const mockMusic = [
