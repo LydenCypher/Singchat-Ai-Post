@@ -760,38 +760,97 @@ export const Feed = ({ posts, stories, onLike, onComment, onChat, playingMusic, 
 // Music Creation Component
 export const MusicCreationPage = ({ onCreateMusic }) => {
   const [prompt, setPrompt] = useState('');
+  const [title, setTitle] = useState('');
   const [genre, setGenre] = useState('Lo-fi');
   const [mood, setMood] = useState('Relaxing');
+  const [instrumental, setInstrumental] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [generationStatus, setGenerationStatus] = useState('');
+  const [error, setError] = useState('');
 
   const genres = ['Lo-fi', 'Electronic', 'Ambient', 'Romantic', 'Jazz', 'Classical', 'Pop', 'Rock'];
   const moods = ['Relaxing', 'Energetic', 'Inspirational', 'Romantic', 'Melancholic', 'Upbeat', 'Dreamy'];
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     if (!prompt.trim()) return;
     
     setIsGenerating(true);
+    setGenerationStatus('Starting music generation...');
+    setError('');
     
-    // Simulate music generation
-    setTimeout(() => {
-      const newMusic = {
-        id: Date.now(),
-        title: prompt.split(' ').slice(0, 3).join(' '),
-        artist: 'You',
-        genre,
-        mood,
-        prompt,
-        duration: '3:' + (Math.floor(Math.random() * 60)).toString().padStart(2, '0'),
-        coverArt: 'https://images.unsplash.com/photo-1557682268-e3955ed5d83f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1NzZ8MHwxfHNlYXJjaHwyfHxncmFkaWVudCUyMGJhY2tncm91bmR8ZW58MHx8fHB1cnBsZXwxNzUzNDU0NzMwfDA&ixlib=rb-4.1.0&q=85',
-        plays: 0,
-        likes: 0,
-        createdAt: 'now'
+    try {
+      // Import the music API
+      const { musicAPI, pollMusicStatus } = await import('./musicAPI');
+      
+      // Generate music
+      const musicData = {
+        prompt: prompt,
+        title: title || prompt.split(' ').slice(0, 3).join(' '),
+        genre: genre,
+        instrumental: instrumental,
+        userId: 'current_user' // TODO: Get from auth context
       };
       
-      onCreateMusic(newMusic);
+      setGenerationStatus('Sending request to Suno AI...');
+      const musicResponse = await musicAPI.generateMusic(musicData);
+      
+      setGenerationStatus('Music generation in progress... This may take 1-2 minutes.');
+      
+      // Poll for completion
+      await pollMusicStatus(
+        musicResponse.id,
+        (status) => {
+          if (status.status === 'processing') {
+            setGenerationStatus('Suno AI is creating your music... Please wait.');
+          } else if (status.status === 'completed') {
+            setGenerationStatus('Music generated successfully!');
+          }
+        }
+      );
+      
+      // Get final status
+      const finalStatus = await musicAPI.checkMusicStatus(musicResponse.id);
+      
+      if (finalStatus.status === 'completed' && finalStatus.audio_urls && finalStatus.audio_urls.length > 0) {
+        // Create music object for the app
+        const newMusic = {
+          id: finalStatus.id,
+          title: finalStatus.title || title || prompt.split(' ').slice(0, 3).join(' '),
+          artist: 'You (Suno AI)',
+          genre: genre,
+          mood: mood,
+          prompt: prompt,
+          duration: '2:30', // Default duration, could be extracted from actual audio
+          coverArt: finalStatus.image_urls?.[0] || 'https://images.unsplash.com/photo-1557682268-e3955ed5d83f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1NzZ8MHwxfHNlYXJjaHwyfHxncmFkaWVudCUyMGJhY2tncm91bmR8ZW58MHx8fHB1cnBsZXwxNzUzNDU0NzMwfDA&ixlib=rb-4.1.0&q=85',
+          audioUrl: finalStatus.audio_urls[0],
+          videoUrl: finalStatus.video_urls?.[0],
+          plays: 0,
+          likes: 0,
+          createdAt: 'now',
+          isAIGenerated: true
+        };
+        
+        onCreateMusic(newMusic);
+        setGenerationStatus('Music added to your feed!');
+        setPrompt('');
+        setTitle('');
+        
+        // Clear status after 3 seconds
+        setTimeout(() => {
+          setGenerationStatus('');
+        }, 3000);
+        
+      } else {
+        throw new Error('Music generation completed but no audio files were generated');
+      }
+      
+    } catch (err) {
+      console.error('Music generation error:', err);
+      setError(err.message || 'Failed to generate music. Please try again.');
+      setGenerationStatus('');
+    } finally {
       setIsGenerating(false);
-      setPrompt('');
-    }, 3000);
+    }
   };
 
   return (
@@ -805,17 +864,47 @@ export const MusicCreationPage = ({ onCreateMusic }) => {
           </div>
           <h2 className="text-2xl font-bold text-gray-800 mb-2">Create Music with Suno AI</h2>
           <p className="text-gray-600">Describe the music you want to create</p>
+          <div className="mt-2 px-3 py-1 bg-green-100 text-green-700 text-xs rounded-full inline-block">
+            ✨ Real AI Music Generation
+          </div>
         </div>
+
+        {/* Error Display */}
+        {error && (
+          <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm">
+            {error}
+          </div>
+        )}
+
+        {/* Generation Status */}
+        {generationStatus && (
+          <div className="mb-4 p-3 bg-blue-100 text-blue-700 rounded-lg text-sm">
+            {generationStatus}
+          </div>
+        )}
 
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Describe your music
+              Song Title (Optional)
+            </label>
+            <input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="e.g., Sunset Dreams"
+              className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Describe your music *
             </label>
             <textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              placeholder="e.g., Create a relaxing lo-fi track perfect for studying with gentle piano melodies"
+              placeholder="e.g., Create a relaxing lo-fi track perfect for studying with gentle piano melodies and soft rain sounds"
               rows={4}
               className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
             />
@@ -849,6 +938,19 @@ export const MusicCreationPage = ({ onCreateMusic }) => {
             </div>
           </div>
 
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="instrumental"
+              checked={instrumental}
+              onChange={(e) => setInstrumental(e.target.checked)}
+              className="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 rounded focus:ring-purple-500"
+            />
+            <label htmlFor="instrumental" className="text-sm text-gray-700">
+              Make it instrumental (no vocals)
+            </label>
+          </div>
+
           <button
             onClick={handleGenerate}
             disabled={!prompt.trim() || isGenerating}
@@ -857,14 +959,14 @@ export const MusicCreationPage = ({ onCreateMusic }) => {
             {isGenerating ? (
               <>
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                Generating Music...
+                Generating with Suno AI...
               </>
             ) : (
               <>
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
                 </svg>
-                Generate Music
+                Generate Music with AI
               </>
             )}
           </button>
@@ -875,7 +977,7 @@ export const MusicCreationPage = ({ onCreateMusic }) => {
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <span>Generated music will be shared to your feed automatically</span>
+            <span>Generated music will be shared to your feed automatically. Generation takes 1-2 minutes.</span>
           </div>
         </div>
       </div>
