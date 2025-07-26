@@ -789,6 +789,9 @@ const mockDiscordMessages = {
     ]
   }
 };
+
+// Mock music data
+const mockMusic = [
   {
     id: 1,
     title: "Sunset Dreams",
