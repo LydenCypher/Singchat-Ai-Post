@@ -554,6 +554,16 @@ export const MusicPlayer = ({ music, isPlaying, onPlayPause, currentTime = 0, du
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-4 mb-4">
+      {/* Hidden audio element for actual playback */}
+      {music.audioUrl && (
+        <audio
+          id={`audio-${music.id}`}
+          src={music.audioUrl}
+          preload="metadata"
+          style={{ display: 'none' }}
+        />
+      )}
+      
       <div className="flex items-center gap-4">
         {/* Cover Art */}
         <div className="relative flex-shrink-0">
@@ -589,6 +599,11 @@ export const MusicPlayer = ({ music, isPlaying, onPlayPause, currentTime = 0, du
               {music.genre}
             </span>
             <span className="text-xs text-gray-500">{music.mood}</span>
+            {music.isAIGenerated && (
+              <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
+                ✨ AI Generated
+              </span>
+            )}
           </div>
 
           {/* Progress Bar */}
@@ -606,12 +621,25 @@ export const MusicPlayer = ({ music, isPlaying, onPlayPause, currentTime = 0, du
           </div>
         </div>
 
-        {/* Stats */}
+        {/* Stats and Download */}
         <div className="text-right flex-shrink-0">
           <div className="text-sm font-medium text-gray-900">{music.plays?.toLocaleString()} plays</div>
           <div className="text-xs text-gray-500 mt-1">
             Created with Suno AI
           </div>
+          {music.audioUrl && (
+            <div className="mt-2">
+              <a
+                href={music.audioUrl}
+                download={`${music.title}.mp3`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-purple-600 hover:text-purple-800 underline"
+              >
+                Download
+              </a>
+            </div>
+          )}
         </div>
       </div>
 
