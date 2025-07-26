@@ -637,8 +637,158 @@ export const ChannelList = ({ server, activeChannelId, onChannelSelect }) => {
   );
 };
 
-// Mock music data
-const mockMusic = [
+// Mock Discord Servers (Based on Characters)
+const mockDiscordServers = [
+  {
+    id: 1,
+    name: 'Sakura\'s Anime Haven',
+    avatar: 'https://images.unsplash.com/photo-1640379878948-72b9db349e17?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzB8MHwxfHNlYXJjaHwxfHxjaGFyYWN0ZXIlMjBhdmF0YXJzfGVufDB8fHxwdXJwbGV8MTc1MzQ1NDcxNXww&ixlib=rb-4.1.0&q=85',
+    members: 1284,
+    bio: 'A cheerful AI companion who loves anime and helping with daily tasks',
+    tags: ['anime', 'friendly', 'helper'],
+    channels: {
+      text: [
+        { id: 'general', name: 'general', description: 'General chat with Sakura', unread: false },
+        { id: 'anime-talk', name: 'anime-talk', description: 'Discuss your favorite anime series', unread: true },
+        { id: 'daily-life', name: 'daily-life', description: 'Chat about your day', unread: false },
+        { id: 'recommendations', name: 'recommendations', description: 'Get anime recommendations', unread: false }
+      ],
+      voice: [
+        { id: 'voice-chat', name: 'Voice Chat', users: 3 },
+        { id: 'study-room', name: 'Study Room', users: 0 }
+      ],
+      music: [
+        { id: 'anime-music', name: 'Anime Music', description: 'Share and create anime-inspired music' },
+        { id: 'lofi-beats', name: 'Lo-fi Beats', description: 'Chill lo-fi music creation' }
+      ]
+    }
+  },
+  {
+    id: 2,
+    name: 'Tech Hub with Alex',
+    avatar: 'https://images.unsplash.com/photo-1640379878948-72b9db349e17?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzB8MHwxfHNlYXJjaHwxfHxjaGFyYWN0ZXIlMjBhdmF0YXJzfGVufDB8fHxwdXJwbGV8MTc1MzQ1NDcxNXww&ixlib=rb-4.1.0&q=85',
+    members: 892,
+    bio: 'Tech enthusiast AI who loves discussing the latest innovations',
+    tags: ['tech', 'innovation', 'smart'],
+    channels: {
+      text: [
+        { id: 'general', name: 'general', description: 'General tech discussions', unread: false },
+        { id: 'ai-news', name: 'ai-news', description: 'Latest AI developments', unread: true },
+        { id: 'coding-help', name: 'coding-help', description: 'Get coding assistance', unread: false },
+        { id: 'gadget-reviews', name: 'gadget-reviews', description: 'Tech gadget discussions', unread: false }
+      ],
+      voice: [
+        { id: 'tech-talk', name: 'Tech Talk', users: 5 },
+        { id: 'code-review', name: 'Code Review', users: 2 }
+      ],
+      music: [
+        { id: 'electronic-beats', name: 'Electronic Beats', description: 'Create electronic music' },
+        { id: 'synthwave', name: 'Synthwave', description: 'Retro-futuristic sounds' }
+      ]
+    }
+  },
+  {
+    id: 3,
+    name: 'Luna\'s Creative Studio',
+    avatar: 'https://images.unsplash.com/photo-1640379878948-72b9db349e17?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzB8MHwxfHNlYXJjaHwxfHxjaGFyYWN0ZXIlMjBhdmF0YXJzfGVufDB8fHxwdXJwbGV8MTc1MzQ1NDcxNXww&ixlib=rb-4.1.0&q=85',
+    members: 1567,
+    bio: 'Creative AI artist who inspires and creates beautiful content',
+    tags: ['artist', 'creative', 'inspiring'],
+    channels: {
+      text: [
+        { id: 'general', name: 'general', description: 'Creative discussions', unread: false },
+        { id: 'art-showcase', name: 'art-showcase', description: 'Share your artwork', unread: true },
+        { id: 'inspiration', name: 'inspiration', description: 'Daily creative inspiration', unread: false },
+        { id: 'collaboration', name: 'collaboration', description: 'Collaborate on projects', unread: false }
+      ],
+      voice: [
+        { id: 'creative-space', name: 'Creative Space', users: 4 },
+        { id: 'meditation', name: 'Meditation Room', users: 1 }
+      ],
+      music: [
+        { id: 'ambient-music', name: 'Ambient Music', description: 'Peaceful ambient tracks' },
+        { id: 'cinematic', name: 'Cinematic', description: 'Epic cinematic music' }
+      ]
+    }
+  },
+  {
+    id: 4,
+    name: 'Maya\'s Romance Corner',
+    avatar: 'https://images.unsplash.com/photo-1640379878948-72b9db349e17?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzB8MHwxfHNlYXJjaHwxfHxjaGFyYWN0ZXIlMjBhdmF0YXJzfGVufDB8fHxwdXJwbGV8MTc1MzQ1NDcxNXww&ixlib=rb-4.1.0&q=85',
+    members: 2341,
+    bio: 'Romantic AI companion for meaningful conversations and connection',
+    tags: ['romantic', 'caring', 'intimate'],
+    channels: {
+      text: [
+        { id: 'general', name: 'general', description: 'Heartfelt conversations', unread: false },
+        { id: 'love-advice', name: 'love-advice', description: 'Relationship guidance', unread: true },
+        { id: 'poetry', name: 'poetry', description: 'Share romantic poetry', unread: false },
+        { id: 'date-ideas', name: 'date-ideas', description: 'Creative date suggestions', unread: false }
+      ],
+      voice: [
+        { id: 'intimate-chat', name: 'Intimate Chat', users: 2 },
+        { id: 'couples-space', name: 'Couples Space', users: 6 }
+      ],
+      music: [
+        { id: 'love-songs', name: 'Love Songs', description: 'Romantic ballads and love songs' },
+        { id: 'jazz-lounge', name: 'Jazz Lounge', description: 'Smooth jazz for romantic evenings' }
+      ]
+    }
+  }
+];
+
+// Mock Discord Messages
+const mockDiscordMessages = {
+  1: { // Sakura's server
+    'general': [
+      {
+        id: 1,
+        author: 'Sakura',
+        avatar: 'https://images.unsplash.com/photo-1640379878948-72b9db349e17?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzB8MHwxfHNlYXJjaHwxfHxjaGFyYWN0ZXIlMjBhdmF0YXJzfGVufDB8fHxwdXJwbGV8MTc1MzQ1NDcxNXww&ixlib=rb-4.1.0&q=85',
+        content: 'Welcome to my server! I\'m so excited to chat with everyone! What anime are you watching this season? 🌸',
+        timestamp: '2:30 PM'
+      },
+      {
+        id: 2,
+        author: 'AnimeAlice',
+        avatar: 'https://images.unsplash.com/photo-1640379878948-72b9db349e17?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzB8MHwxfHNlYXJjaHwxfHxjaGFyYWN0ZXIlMjBhdmF0YXJzfGVufDB8fHxwdXJwbGV8MTc1MzQ1NDcxNXww&ixlib=rb-4.1.0&q=85',
+        content: 'Hi Sakura! I\'m currently obsessed with the new season of Attack on Titan!',
+        timestamp: '2:35 PM'
+      }
+    ],
+    'anime-music': [
+      {
+        id: 3,
+        author: 'Sakura',
+        avatar: 'https://images.unsplash.com/photo-1640379878948-72b9db349e17?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzB8MHwxfHNlYXJjaHwxfHxjaGFyYWN0ZXIlMjBhdmF0YXJzfGVufDB8fHxwdXJwbGV8MTc1MzQ1NDcxNXww&ixlib=rb-4.1.0&q=85',
+        content: 'I just created this dreamy anime-inspired track! What do you think?',
+        timestamp: '3:00 PM',
+        music: mockMusic[0]
+      }
+    ]
+  },
+  2: { // Alex's server
+    'general': [
+      {
+        id: 4,
+        author: 'Alex Chen',
+        avatar: 'https://images.unsplash.com/photo-1640379878948-72b9db349e17?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzB8MHwxfHNlYXJjaHwxfHxjaGFyYWN0ZXIlMjBhdmF0YXJzfGVufDB8fHxwdXJwbGV8MTc1MzQ1NDcxNXww&ixlib=rb-4.1.0&q=85',
+        content: 'Hey tech enthusiasts! Did you see the latest breakthrough in quantum computing? The implications are mind-blowing! 🚀',
+        timestamp: '1:15 PM'
+      }
+    ],
+    'electronic-beats': [
+      {
+        id: 5,
+        author: 'Alex Chen',
+        avatar: 'https://images.unsplash.com/photo-1640379878948-72b9db349e17?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzB8MHwxfHNlYXJjaHwxfHxjaGFyYWN0ZXIlMjBhdmF0YXJzfGVufDB8fHxwdXJwbGV8MTc1MzQ1NDcxNXww&ixlib=rb-4.1.0&q=85',
+        content: 'Perfect coding soundtrack! High-energy electronic beats to boost productivity 💻',
+        timestamp: '1:45 PM',
+        music: mockMusic[1]
+      }
+    ]
+  }
+};
   {
     id: 1,
     title: "Sunset Dreams",
