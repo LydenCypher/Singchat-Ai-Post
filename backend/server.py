@@ -21,6 +21,14 @@ mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
+# Suno AI Configuration
+SUNO_API_KEY = os.environ.get('SUNO_API_KEY')
+SUNO_BASE_URL = "https://studio-api.suno.ai/api/external"
+SUNO_HEADERS = {
+    "Authorization": f"Bearer {SUNO_API_KEY}",
+    "Content-Type": "application/json"
+}
+
 # Create the main app without a prefix
 app = FastAPI()
 
