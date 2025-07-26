@@ -219,14 +219,18 @@ export const useTheme = () => {
   return context;
 };
 
-// Theme Selector Component
+// Enhanced Theme Selector with Background Options
 export const ThemeSelector = () => {
-  const { currentTheme, switchTheme, themes } = useTheme();
+  const { currentTheme, switchTheme, themes, currentBackground, switchBackground, backgroundThemes } = useTheme();
+  const [showThemes, setShowThemes] = useState(false);
+  const [showBackgrounds, setShowBackgrounds] = useState(false);
 
   return (
-    <div className="fixed top-4 right-20 z-50">
+    <div className="fixed top-4 right-4 z-50 flex gap-2">
+      {/* Theme Selector */}
       <div className="relative">
         <button 
+          onClick={() => setShowThemes(!showThemes)}
           className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-full p-2 text-white hover:bg-white/20 transition-colors"
           title="Change Theme"
         >
@@ -234,20 +238,64 @@ export const ThemeSelector = () => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v6a2 2 0 002 2h4a2 2 0 002-2V5z" />
           </svg>
         </button>
-        <div className="absolute top-full right-0 mt-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg p-2 min-w-40">
-          {Object.entries(themes).map(([key, theme]) => (
-            <button
-              key={key}
-              onClick={() => switchTheme(key)}
-              className={`w-full text-left px-3 py-2 rounded-md text-sm text-white hover:bg-white/10 transition-colors flex items-center gap-2 ${
-                currentTheme === key ? 'bg-white/20' : ''
-              }`}
-            >
-              <div className={`w-3 h-3 rounded-full bg-${theme.colors.primary}`}></div>
-              {theme.name}
-            </button>
-          ))}
-        </div>
+        {showThemes && (
+          <div className="absolute top-full right-0 mt-2 bg-black/80 backdrop-blur-sm border border-white/20 rounded-lg p-2 min-w-40">
+            {Object.entries(themes).map(([key, theme]) => (
+              <button
+                key={key}
+                onClick={() => {
+                  switchTheme(key);
+                  setShowThemes(false);
+                }}
+                className={`w-full text-left px-3 py-2 rounded-md text-sm text-white hover:bg-white/10 transition-colors flex items-center gap-2 ${
+                  currentTheme === key ? 'bg-white/20' : ''
+                }`}
+              >
+                <div className={`w-3 h-3 rounded-full bg-${theme.colors.primary}`}></div>
+                {theme.name}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Background Selector */}
+      <div className="relative">
+        <button 
+          onClick={() => setShowBackgrounds(!showBackgrounds)}
+          className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-full p-2 text-white hover:bg-white/20 transition-colors"
+          title="Change Background"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+        </button>
+        {showBackgrounds && (
+          <div className="absolute top-full right-0 mt-2 bg-black/80 backdrop-blur-sm border border-white/20 rounded-lg p-2 min-w-48">
+            {Object.entries(backgroundThemes).map(([key, bg]) => (
+              <button
+                key={key}
+                onClick={() => {
+                  switchBackground(key);
+                  setShowBackgrounds(false);
+                }}
+                className={`w-full text-left px-3 py-2 rounded-md text-sm text-white hover:bg-white/10 transition-colors flex items-center gap-2 ${
+                  currentBackground === key ? 'bg-white/20' : ''
+                }`}
+              >
+                <div 
+                  className={`w-6 h-4 rounded ${bg.gradient} ${bg.animation}`}
+                  style={{ 
+                    backgroundImage: `url(${bg.image})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center'
+                  }}
+                ></div>
+                {bg.name}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
