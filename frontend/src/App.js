@@ -3,20 +3,16 @@ import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import {
   LandingPage,
-  Feed,
-  DiscoveryPage,
-  CharacterProfile,
-  ChatInterface,
-  BottomNavigation,
-  MusicCreationPage,
-  MusicDiscoveryPage,
+  DiscordApp,
   ThemeProvider,
   useTheme,
   FreeBadge,
   mockCharacters,
   mockPosts,
   mockStories,
-  mockMusic
+  mockMusic,
+  mockDiscordServers,
+  mockDiscordMessages
 } from './components';
 
 function AppContent() {
